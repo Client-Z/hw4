@@ -1,0 +1,14 @@
+{
+	"extends": "airbnb/base",
+	"rules": {
+		"max-len": [
+			2,
+			{
+				"code": 180,
+				"tabWidth": 4,
+				"ignoreUrls": true
+			}
+		]
+	},
+	"plugins": ["prettier"]
+}
