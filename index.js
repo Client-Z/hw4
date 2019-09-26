@@ -2,9 +2,11 @@ const http = require('http');
 const pug = require('pug');
 const qs = require('querystring');
 
+let fieldName = '';
+
 const server = http.createServer((req, res) => {
   const baseURL = `http://${req.headers.host}/`;
-  let fieldName = '';
+
   // routing
   res.setHeader('content-type', 'text/html');
   if (req.method === 'GET' && req.url !== '/favicon.ico') {
