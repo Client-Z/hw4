@@ -8,7 +8,6 @@
 		"dev": "nodemon index.js",
 		"lint": "eslint ."
 	},
-	"precommit": "lint-staged",
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
