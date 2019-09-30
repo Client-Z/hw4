@@ -1,39 +1,38 @@
-const http = require('http');
-const pug = require('pug');
-const qs = require('querystring');
+const http = require('http')
+const pug = require('pug')
+const qs = require('querystring')
 
-let fieldName = '';
+let fieldName = ''
 
 const server = http.createServer((req, res) => {
-  const baseURL = `http://${req.headers.host}/`;
-
+  const baseURL = `http://${req.headers.host}/`
+  const compiledForm = pug.compileFile('./views/form.pug')
+  const compiledTemplate = pug.compileFile('./views/result_template.pug')
   // routing
-  res.setHeader('content-type', 'text/html');
+  res.setHeader('content-type', 'text/html')
   if (req.method === 'GET' && req.url !== '/favicon.ico') {
-    const findParam = new URL(req.url, baseURL).searchParams;
-    fieldName = findParam.has('fieldName') ? findParam.get('fieldName') : 'default';
-    const compiledFunction = pug.compileFile('./views/form.pug');
-    res.write(compiledFunction({ fieldName }));
-    res.end();
+    const findParam = new URL(req.url, baseURL).searchParams
+    fieldName = findParam.has('fieldName') ? findParam.get('fieldName') : 'default'
+    res.write(compiledForm({ fieldName }))
+    res.end()
   } else if (req.method === 'POST' && req.url === '/') {
-    let body = '';
+    let body = ''
     req.on('data', (data) => {
-      body += data;
+      body += data
       // if we are getting too much POST data, kill the connection!
       // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
-      if (body.length > 1e6) req.connection.destroy();
-    });
+      if (body.length > 1e6) req.connection.destroy()
+    })
     req.on('end', () => {
-      const post = qs.parse(body);
-      const compiledFunction = pug.compileFile('./views/result_template.pug');
-      res.write(compiledFunction({ fieldName, value: post[fieldName] }));
-      res.end();
-    });
+      const post = qs.parse(body)
+      res.write(compiledTemplate({ fieldName, value: post[fieldName] }))
+      res.end()
+    })
   } else {
-    res.write('wrong request');
+    res.write('wrong request')
   }
-});
+})
 
 server.listen(3000, (err) => {
-  if (err) console.error('something bad happened', err);
-});
+  if (err) console.error('something bad happened', err)
+})
